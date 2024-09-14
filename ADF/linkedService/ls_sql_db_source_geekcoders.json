@@ -1,0 +1,24 @@
+{
+	"name": "ls_sql_db_source_geekcoders",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "geekcoderssourceserver.database.windows.net",
+			"database": "geekcodersserver-source-db",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "geekcoderssourceserveradmin",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_clients_key_vault_account_dev",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sql-db-source-geekcoders-secret"
+			}
+		}
+	}
+}

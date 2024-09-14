@@ -1,0 +1,166 @@
+{
+	"name": "pl03_copydata_airlabsApi_to_adlsgen2dev",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web_acivity_airlab_api_source",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": "https://greekcoderkeyvault-dev.vault.azure.net/secrets/airlabs-api-url-secret/1c547e58d63343d68000187d579dbcb1?api-version=7.0",
+					"authentication": {
+						"type": "MSI",
+						"resource": " https://vault.azure.net"
+					}
+				}
+			},
+			{
+				"name": "Lookup_paramerters_api_sink_location",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_paramerters_api_sink_location",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach_parmerter_of_lookup",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup_paramerters_api_sink_location",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Web_acivity_airlab_api_source",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_paramerters_api_sink_location').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "CopyData_airlabapi_to_adlsgen2_dev_copy1",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "RestSource",
+									"httpRequestTimeout": "00:01:40",
+									"requestInterval": "00.00:00:00.010",
+									"requestMethod": "GET"
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"path": "$['response']"
+											},
+											"sink": {
+												"path": "$['response']"
+											}
+										}
+									],
+									"collectionReference": ""
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_RestResource",
+									"type": "DatasetReference",
+									"parameters": {
+										"url": {
+											"value": "@activity('Web_acivity_airlab_api_source').output.value",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_api_data_json_sink",
+									"type": "DatasetReference",
+									"parameters": {
+										"api_containerName": {
+											"value": "@item().api_containerName",
+											"type": "Expression"
+										},
+										"api_directoryName": {
+											"value": "@item().api_directoryName",
+											"type": "Expression"
+										},
+										"api_fileName": {
+											"value": "@item().api_fileName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-09-14T13:48:46Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

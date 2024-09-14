@@ -1,0 +1,9 @@
+{
+	"name": "greekcoders",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "96913340-ffc0-4f11-a0e3-88483fe8aede",
+		"tenantId": "441384a0-ded9-4785-88ca-4e834e4601a9"
+	}
+}

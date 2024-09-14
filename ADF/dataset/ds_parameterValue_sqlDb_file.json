@@ -1,0 +1,39 @@
+{
+	"name": "ds_parameterValue_sqlDb_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adlsgen2_geekcoders_sink_dev",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "parameters_sqlDb_pipeline.json",
+				"fileSystem": "manual-files"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"tableName": {
+					"type": "string"
+				},
+				"schema_Name": {
+					"type": "string"
+				},
+				"containerName_sink": {
+					"type": "string"
+				},
+				"directory_sink": {
+					"type": "string"
+				},
+				"fileName_sink": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

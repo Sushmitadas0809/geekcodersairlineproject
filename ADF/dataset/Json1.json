@@ -1,0 +1,42 @@
+{
+	"name": "Json1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adlsgen2_geekcoders_sink_dev",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "parameter_value.json",
+				"fileSystem": "manual-files"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"fileName_source": {
+					"type": "string"
+				},
+				"containerName_source": {
+					"type": "string"
+				},
+				"directory_source": {
+					"type": "string"
+				},
+				"fileName_sink": {
+					"type": "string"
+				},
+				"containerName_sink": {
+					"type": "string"
+				},
+				"directory_sink": {
+					"type": "string"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

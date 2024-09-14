@@ -1,0 +1,22 @@
+{
+	"name": "ls_adlsgen2_geekcoders_source",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://greekcodersadlsgen2.dfs.core.windows.net/",
+			"tenant": "441384a0-ded9-4785-88ca-4e834e4601a9",
+			"servicePrincipalId": "79288faf-09a1-4233-84f8-ed2e8aa512df",
+			"servicePrincipalCredentialType": "ServicePrincipalKey",
+			"servicePrincipalCredential": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_clients_key_vault_account_dev",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "client-secret"
+			}
+		}
+	}
+}

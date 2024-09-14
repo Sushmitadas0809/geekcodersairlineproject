@@ -1,0 +1,11 @@
+{
+	"name": "ls_clients_key_vault_account_dev",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://greekcoderkeyvault-dev.vault.azure.net/"
+		}
+	}
+}

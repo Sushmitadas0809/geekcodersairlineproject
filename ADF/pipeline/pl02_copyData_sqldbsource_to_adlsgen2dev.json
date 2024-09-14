@@ -1,0 +1,137 @@
+{
+	"name": "pl02_copyData_sqldbsource_to_adlsgen2dev",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_parameter_sqlDb",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_parameterValue_sqlDb_file",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach_parmeter_sqlDB",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup_parameter_sqlDb",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_parameter_sqlDb').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "CopyData_sqlDb_adlsgen2dev",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_sql_db_source",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@item().tableName",
+											"type": "Expression"
+										},
+										"schema_Name": {
+											"value": "@item().schema_Name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_adlsgen2_parquet_sink",
+									"type": "DatasetReference",
+									"parameters": {
+										"containerName_sink": {
+											"value": "@item().containerName_sink",
+											"type": "Expression"
+										},
+										"directory_sink": {
+											"value": "@item().directory_sink",
+											"type": "Expression"
+										},
+										"tableName_sink": {
+											"value": "@item().tableName_sink",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-09-14T14:05:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
