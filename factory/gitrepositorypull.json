@@ -1,0 +1,9 @@
+{
+	"name": "gitrepositorypull",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "c42970d5-9c85-4d35-bffb-b880ac9a0536",
+		"tenantId": "441384a0-ded9-4785-88ca-4e834e4601a9"
+	}
+}
